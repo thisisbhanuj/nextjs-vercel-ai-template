@@ -1,5 +1,5 @@
 import { openai } from '@ai-sdk/openai';
-import { StreamingTextResponse, streamText, StreamData } from 'ai';
+import { streamText, StreamData } from 'ai';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -13,14 +13,9 @@ export async function POST(req: Request) {
   });
 
   const data = new StreamData();
-
   data.append({ test: 'BHANUJ' });
 
-  const stream = result.toAIStream({
-    onFinal(_) {
-      data.close();
-    },
+  return result.toDataStreamResponse({
+    data,
   });
-
-  return new StreamingTextResponse(stream, {}, data);
 }
